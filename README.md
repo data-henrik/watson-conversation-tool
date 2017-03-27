@@ -1,6 +1,15 @@
 # Watson Conversation Tool
-The Watson Conversation Tool (wctool) is a Python-based command line tool to manage workspaces of the (IBM Watson Conversation)[https://www.ibm.com/watson/developercloud/doc/conversation/index.html] service in IBM Bluemix.
+The Watson Conversation Tool (wctool) is a Python-based command line tool to manage workspaces of the [IBM Watson Conversation](https://www.ibm.com/watson/developercloud/doc/conversation/index.html) service in IBM Bluemix.
 
+# Overview
+To use the tool, copy `config.json.sample` to `config.json` and insert your service credentials.
+
+Some commands and parameters:
+```
+-l                             : List the workspaces
+-g -id workspaceID             : Get details for a specific workspace
+-g -id workspaceID -o outfile  : Save workspace to a file
+```
 
 # License
 See [LICENSE](LICENSE) for license information.
