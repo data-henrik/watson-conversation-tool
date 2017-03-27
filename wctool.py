@@ -33,7 +33,8 @@ def getParameters(args=None):
     parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
     parser.add_argument("-full",dest='fullWorkspace', action='store_true', help='get the full workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
-    parser.add_argument("-o",dest='outFile', help='Workspace ID')
+    parser.add_argument("-o",dest='outFile', help='output file')
+    parser.add_argument("-i",dest='inFile', help='input file')
     parser.add_argument("-name",dest='wsName', help='Workspace Name')
     parser.add_argument("-desc",dest='wsDescription', help='Workspace Description')
     parser.add_argument("-lang",dest='wsLang', help='Workspace Language')
@@ -70,6 +71,24 @@ def updateWorkspace(workspaceID,
     print "Workspace updated - new workspace"
     print(json.dumps(ws, indent=2))
 
+# Create a new workspace
+def createWorkspace(newName, newDescription, newLang, inFile):
+    with open(inFile) as jsonFile:
+        ws=json.load(jsonFile)
+    newWorkspace=conversation.create_workspace(name=newName,
+                                               description=newDescription,
+                                               language=newLang,
+                                               intents=ws["intents"],
+                                               entities=ws["entities"],
+                                               dialog_nodes=ws["dialog_nodes"],
+                                               counterexamples=ws["counterexamples"],
+                                               metadata=ws['metadata'])
+    print(json.dumps(newWorkspace, indent=2))
+
+# Delete a workspaceID
+def deleteWorkspace(workspaceID):
+    conversation.delete_workspace(workspaceID)
+    print "Workspace deleted"
 
 #
 # Main program, for now just detect what function to call and invoke it
@@ -89,3 +108,10 @@ if __name__ == '__main__':
                         parms.wsName,
                         parms.wsDescription,
                         parms.wsLang)
+    if (parms.createWorkspace and parms.wsName and parms.wsDescription and parms.wsLang and parms.inFile):
+        createWorkspace(newName=parms.wsName,
+                        newDescription=parms.wsDescription,
+                        newLang=parms.wsLang,
+                        inFile=parms.inFile)
+    if (parms.deleteWorkspace and parms.workspaceID):
+        deleteWorkspace(parms.workspaceID)

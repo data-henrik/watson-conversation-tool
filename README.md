@@ -15,6 +15,12 @@ Get (full) information about a workspace and print or save it
 
 Update an existing workspace:
 -u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
+
+Delete an existing workspace:
+-d -id workspaceID
+
+Create a new workspace (with intents, entities etc. read from existing workspace file):
+-c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace
 ```
 
 # License
