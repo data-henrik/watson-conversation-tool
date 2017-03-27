@@ -26,9 +26,9 @@ conversation = ConversationV1(
 # Define parameters that we want to catch and some basic command help
 def getParameters(args=None):
     parser = argparse.ArgumentParser(description='Process my Watson Conversation Commands',prog='wctool')
-    parser.add_argument("--list", "-l",dest='listWorkspaces', action='store_true', help='--list')
-    parser.add_argument("--get", "-g",dest='getWorkspace', action='store_true', help='--get')
-    parser.add_argument("-export",dest='exportWorkspace', action='store_true', help='export the workspace')
+    parser.add_argument("-l",dest='listWorkspaces', action='store_true', help='list workspaces')
+    parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
+    parser.add_argument("-full",dest='fullWorkspace', action='store_true', help='get the full workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
     parser.add_argument("-o",dest='outFile', help='Workspace ID')
 
@@ -48,7 +48,7 @@ def getSaveWorkspace(workspaceID,outFile):
     ws=conversation.get_workspace(workspace_id=workspaceID,export=True)
     with open(outFile,'w') as jsonFile:
         json.dump(ws, jsonFile, indent=2)
-    print("Document saved to ",outFile)
+    print "Document saved to " + outFile
 
 
 #
@@ -63,4 +63,4 @@ if __name__ == '__main__':
         if (parms.outFile):
             getSaveWorkspace(parms.workspaceID,parms.outFile)
         else:
-            getPrintWorkspace(parms.workspaceID,exportWS=parms.exportWorkspace)
+            getPrintWorkspace(parms.workspaceID,exportWS=parms.fullWorkspace)
