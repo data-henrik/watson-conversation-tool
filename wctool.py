@@ -1,9 +1,11 @@
-# Manage workspaces for IBM Watson Conversation service on Bluemix
-#
-# This is a simple Python script to manage Conversation workspaces.
-# See the README for details.
+# Copyright 2017 IBM Corp. All Rights Reserved.
+# See LICENSE for details.
 #
 # Author: Henrik Loeser
+#
+# Manage workspaces for IBM Watson Conversation service on IBM Bluemix.
+# See the README for documentation.
+#
 
 import json, argparse
 from os.path import join, dirname
@@ -23,11 +25,13 @@ conversation = ConversationV1(
 
 # Define parameters that we want to catch and some basic command help
 def getParameters(args=None):
-    parser = argparse.ArgumentParser(description='Process my Watson Conversation Commands',prog='wc-client')
+    parser = argparse.ArgumentParser(description='Process my Watson Conversation Commands',prog='wctool')
     parser.add_argument("--list", "-l",dest='listWorkspaces', action='store_true', help='--list')
     parser.add_argument("--get", "-g",dest='getWorkspace', action='store_true', help='--get')
     parser.add_argument("-export",dest='exportWorkspace', action='store_true', help='export the workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
+    parser.add_argument("-o",dest='outFile', help='Workspace ID')
+
     parms = parser.parse_args()
     return parms
 
@@ -35,9 +39,17 @@ def getParameters(args=None):
 def listWorkspaces():
     print(json.dumps(conversation.list_workspaces(), indent=2))
 
-# Get a specific workspaceID
-def getWorkspace(workspaceID,exportWS):
+# Get and print a specific workspace by ID
+def getPrintWorkspace(workspaceID,exportWS):
     print(json.dumps(conversation.get_workspace(workspace_id=workspaceID,export=exportWS), indent=2))
+
+# Get a specific workspace by ID and export to file
+def getSaveWorkspace(workspaceID,outFile):
+    ws=conversation.get_workspace(workspace_id=workspaceID,export=True)
+    with open(outFile,'w') as jsonFile:
+        json.dump(ws, jsonFile, indent=2)
+    print("Document saved to ",outFile)
+
 
 #
 # Main program, for now just detect what function to call and invoke it
@@ -45,9 +57,10 @@ def getWorkspace(workspaceID,exportWS):
 if __name__ == '__main__':
     parms = getParameters()
     print parms
-    if (parms.registerDialog and parms.dialogFile):
-       registerDialog(parms.dialogFile,parms.dialogName)
     if (parms.listWorkspaces):
-       listWorkspaces()
+        listWorkspaces()
     if (parms.getWorkspace and parms.workspaceID):
-        getWorkspace(parms.workspaceID,exportWS=parms.exportWorkspace)
+        if (parms.outFile):
+            getSaveWorkspace(parms.workspaceID,parms.outFile)
+        else:
+            getPrintWorkspace(parms.workspaceID,exportWS=parms.exportWorkspace)
