@@ -6,9 +6,15 @@ To use the tool, copy `config.json.sample` to `config.json` and insert your serv
 
 Some commands and parameters:
 ```
--l                             : List the workspaces
--g -id workspaceID -full       : Get details for a specific workspace
--g -id workspaceID -o outfile  : Save workspace to a file
+List all workspaces:
+-l
+
+Get (full) information about a workspace and print or save it
+-g -id workspaceID -full       
+-g -id workspaceID -o outfile
+
+Update an existing workspace:
+-u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
 ```
 
 # License

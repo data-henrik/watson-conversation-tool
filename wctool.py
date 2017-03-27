@@ -27,10 +27,17 @@ conversation = ConversationV1(
 def getParameters(args=None):
     parser = argparse.ArgumentParser(description='Process my Watson Conversation Commands',prog='wctool')
     parser.add_argument("-l",dest='listWorkspaces', action='store_true', help='list workspaces')
+    parser.add_argument("-c",dest='createWorkspace', action='store_true', help='create workspace')
+    parser.add_argument("-u",dest='updateWorkspace', action='store_true', help='update workspace')
+    parser.add_argument("-d",dest='deleteWorkspace', action='store_true', help='delete workspace')
     parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
     parser.add_argument("-full",dest='fullWorkspace', action='store_true', help='get the full workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
     parser.add_argument("-o",dest='outFile', help='Workspace ID')
+    parser.add_argument("-name",dest='wsName', help='Workspace Name')
+    parser.add_argument("-desc",dest='wsDescription', help='Workspace Description')
+    parser.add_argument("-lang",dest='wsLang', help='Workspace Language')
+
 
     parms = parser.parse_args()
     return parms
@@ -51,6 +58,19 @@ def getSaveWorkspace(workspaceID,outFile):
     print "Document saved to " + outFile
 
 
+# Update a workspace
+def updateWorkspace(workspaceID,
+                    newName=None,
+                    newDescription=None,
+                    newLang=None):
+    ws=conversation.update_workspace(workspace_id=workspaceID,
+                                    name=newName,
+                                    description=newDescription,
+                                    language=newLang)
+    print "Workspace updated - new workspace"
+    print(json.dumps(ws, indent=2))
+
+
 #
 # Main program, for now just detect what function to call and invoke it
 #
@@ -64,3 +84,8 @@ if __name__ == '__main__':
             getSaveWorkspace(parms.workspaceID,parms.outFile)
         else:
             getPrintWorkspace(parms.workspaceID,exportWS=parms.fullWorkspace)
+    if (parms.updateWorkspace and parms.workspaceID):
+        updateWorkspace(parms.workspaceID,
+                        parms.wsName,
+                        parms.wsDescription,
+                        parms.wsLang)
