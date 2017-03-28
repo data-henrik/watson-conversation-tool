@@ -25,7 +25,9 @@ conversation = ConversationV1(
 
 # Define parameters that we want to catch and some basic command help
 def getParameters(args=None):
-    parser = argparse.ArgumentParser(description='Process my Watson Conversation Commands',prog='wctool')
+    parser = argparse.ArgumentParser(description='Manage Watson Conversation workspaces',
+                                     prog='wctool.py',
+                                     usage='%(prog)s [-h | -l | -g | -c | -u | -d] [options]')
     parser.add_argument("-l",dest='listWorkspaces', action='store_true', help='list workspaces')
     parser.add_argument("-c",dest='createWorkspace', action='store_true', help='create workspace')
     parser.add_argument("-u",dest='updateWorkspace', action='store_true', help='update workspace')
@@ -33,17 +35,16 @@ def getParameters(args=None):
     parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
     parser.add_argument("-full",dest='fullWorkspace', action='store_true', help='get the full workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
-    parser.add_argument("-o",dest='outFile', help='output file')
-    parser.add_argument("-i",dest='inFile', help='input file')
+    parser.add_argument("-o",dest='outFile', help='Workspace Output File')
+    parser.add_argument("-i",dest='inFile', help='Workspace Input File')
     parser.add_argument("-name",dest='wsName', help='Workspace Name')
     parser.add_argument("-desc",dest='wsDescription', help='Workspace Description')
     parser.add_argument("-lang",dest='wsLang', help='Workspace Language')
-    parser.add_argument("-intents",dest='wsIntents', action='store_true', help='Intents')
-    parser.add_argument("-entities",dest='wsEntities', action='store_true', help='Entities')
-    parser.add_argument("-dialog_nodes",dest='wsDialogNodes', action='store_true', help='Dialog Nodes')
-    parser.add_argument("-counterexamples",dest='wsCounterexamples', action='store_true', help='Counterexamples')
-    parser.add_argument("-metadata",dest='wsMetadata', action='store_true', help='Metadata')
-
+    parser.add_argument("-intents",dest='wsIntents', action='store_true', help='Update Intents')
+    parser.add_argument("-entities",dest='wsEntities', action='store_true', help='Update Entities')
+    parser.add_argument("-dialog_nodes",dest='wsDialogNodes', action='store_true', help='Update Dialog Nodes')
+    parser.add_argument("-counterexamples",dest='wsCounterexamples', action='store_true', help='Update Counterexamples')
+    parser.add_argument("-metadata",dest='wsMetadata', action='store_true', help='Update Metadata')
 
     parms = parser.parse_args()
     return parms

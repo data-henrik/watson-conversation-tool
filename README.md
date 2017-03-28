@@ -9,21 +9,21 @@ To use the tool, copy `config.json.sample` to `config.json` and insert your serv
 
 Some commands and parameters:
 ```
-List all workspaces:
+LIST all workspaces:
 -l
 
-Get (full) information about a workspace and print or save it
+GET (full) information about a workspace and print or save it
 -g -id workspaceID -full       
 -g -id workspaceID -o outfile
 
-Update an existing workspace (with optionally intents, entities, etc. read from existing workspace file):
+UPDATE an existing workspace (with optionally intents, entities, etc. read from existing workspace file):
 -u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
   [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-i input-workspace]
 
-Delete an existing workspace:
+DELETE an existing workspace:
 -d -id workspaceID
 
-Create a new workspace (with intents, entities etc. read from existing workspace file):
+CREATE a new workspace (with intents, entities etc. read from existing workspace file):
 -c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace
 ```
 
