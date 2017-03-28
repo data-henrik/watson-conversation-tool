@@ -36,6 +36,7 @@ Here are some useful links to documentation and other resources:
 * API for Watson Conversation service: https://www.ibm.com/watson/developercloud/conversation/api/v1/#introduction
 * Python SDK, Watson Developer Cloud: https://github.com/watson-developer-cloud/python-sdk
 * Conversation API file in Python SDK: https://github.com/watson-developer-cloud/python-sdk/blob/master/watson_developer_cloud/conversation_v1.py
+* The `argparse` module used for this tool: https://docs.python.org/2/library/argparse.html
 
 # License
 See [LICENSE](LICENSE) for license information.
