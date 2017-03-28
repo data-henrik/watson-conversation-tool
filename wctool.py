@@ -38,6 +38,11 @@ def getParameters(args=None):
     parser.add_argument("-name",dest='wsName', help='Workspace Name')
     parser.add_argument("-desc",dest='wsDescription', help='Workspace Description')
     parser.add_argument("-lang",dest='wsLang', help='Workspace Language')
+    parser.add_argument("-intents",dest='wsIntents', action='store_true', help='Intents')
+    parser.add_argument("-entities",dest='wsEntities', action='store_true', help='Entities')
+    parser.add_argument("-dialog_nodes",dest='wsDialogNodes', action='store_true', help='Dialog Nodes')
+    parser.add_argument("-counterexamples",dest='wsCounterexamples', action='store_true', help='Counterexamples')
+    parser.add_argument("-metadata",dest='wsMetadata', action='store_true', help='Metadata')
 
 
     parms = parser.parse_args()
@@ -63,11 +68,48 @@ def getSaveWorkspace(workspaceID,outFile):
 def updateWorkspace(workspaceID,
                     newName=None,
                     newDescription=None,
-                    newLang=None):
+                    newLang=None,
+                    intents=None,
+                    entities=None,
+                    dialog_nodes=None,
+                    counterexamples=None,
+                    metadata=None,
+                    inFile=None):
+    payload = {'intents': None,
+                'entities': None,
+                'dialog_nodes': None,
+                'counterexamples': None,
+                'metadata': None}
+    # Only read from file if specified
+    if (inFile is not None):
+        with open(inFile) as jsonFile:
+            ws=json.load(jsonFile)
+        # Read the sections to be updated
+        if intents is not None:
+            payload['intents'] = ws['intents']
+
+        if entities is not None:
+            payload['entities'] = ws['entities']
+
+        if dialog_nodes is not None:
+            payload['dialog_nodes'] = ws['dialog_nodes']
+
+        if counterexamples is not None:
+            payload['counterexamples'] = ws['counterexamples']
+
+        if metadata is not None:
+            payload['metadata'] = ws['metadata']
+
+    # Now update the workspace
     ws=conversation.update_workspace(workspace_id=workspaceID,
                                     name=newName,
                                     description=newDescription,
-                                    language=newLang)
+                                    language=newLang,
+                                    intents=payload['intents'],
+                                    entities=payload['entities'],
+                                    dialog_nodes=payload['dialog_nodes'],
+                                    counterexamples=payload['counterexamples'],
+                                    metadata=payload['metadata'])
     print "Workspace updated - new workspace"
     print(json.dumps(ws, indent=2))
 
@@ -107,7 +149,13 @@ if __name__ == '__main__':
         updateWorkspace(parms.workspaceID,
                         parms.wsName,
                         parms.wsDescription,
-                        parms.wsLang)
+                        parms.wsLang,
+                        parms.wsIntents,
+                        parms.wsEntities,
+                        parms.wsDialogNodes,
+                        parms.wsCounterexamples,
+                        parms.wsMetadata,
+                        parms.inFile)
     if (parms.createWorkspace and parms.wsName and parms.wsDescription and parms.wsLang and parms.inFile):
         createWorkspace(newName=parms.wsName,
                         newDescription=parms.wsDescription,

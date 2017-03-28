@@ -13,8 +13,9 @@ Get (full) information about a workspace and print or save it
 -g -id workspaceID -full       
 -g -id workspaceID -o outfile
 
-Update an existing workspace:
+Update an existing workspace (with optionally intents, entities, etc. read from existing workspace file):
 -u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
+  [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-i input-workspace]
 
 Delete an existing workspace:
 -d -id workspaceID
