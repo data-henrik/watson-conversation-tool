@@ -24,6 +24,9 @@ Create a new workspace (with intents, entities etc. read from existing workspace
 -c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace
 ```
 
+See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code.
+
+
 # License
 See [LICENSE](LICENSE) for license information.
 
