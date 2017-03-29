@@ -46,6 +46,8 @@ Here are some useful links to documentation and other resources:
 # License
 See [LICENSE](LICENSE) for license information.
 
+The tool is provided on a "as-is" basis and is un-supported. Use with care...
+
 # Contribute / Contact Information
 If you have found errors or some instructions are not working anymore, then please open an GitHub issue or, better, create a pull request with your desired changes.
 
