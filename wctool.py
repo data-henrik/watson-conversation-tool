@@ -62,10 +62,11 @@ def getSaveWorkspace(workspaceID,outFile):
     ws=conversation.get_workspace(workspace_id=workspaceID,export=True)
     with open(outFile,'w') as jsonFile:
         json.dump(ws, jsonFile, indent=2)
-    print "Document saved to " + outFile
+    print "Workspace saved to " + outFile
 
 
 # Update a workspace
+# The workspace parts to be updated were specified as command line options
 def updateWorkspace(workspaceID,
                     newName=None,
                     newDescription=None,
