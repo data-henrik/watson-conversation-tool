@@ -33,6 +33,7 @@ def getParameters(args=None):
     parser.add_argument("-u",dest='updateWorkspace', action='store_true', help='update workspace')
     parser.add_argument("-d",dest='deleteWorkspace', action='store_true', help='delete workspace')
     parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
+    parser.add_argument("-logs",dest='listLogs', action='store_true', help='list logs')
     parser.add_argument("-full",dest='fullWorkspace', action='store_true', help='get the full workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
     parser.add_argument("-o",dest='outFile', help='Workspace Output File')
@@ -134,6 +135,13 @@ def deleteWorkspace(workspaceID):
     conversation.delete_workspace(workspaceID)
     print "Workspace deleted"
 
+# List logs for a specific workspace by ID
+# For now just dump them, do not filter, do not store
+def listLogs(workspaceID):
+    print(json.dumps(conversation.list_logs(workspace_id=workspaceID), indent=2))
+
+
+
 #
 # Main program, for now just detect what function to call and invoke it
 #
@@ -165,3 +173,5 @@ if __name__ == '__main__':
                         inFile=parms.inFile)
     if (parms.deleteWorkspace and parms.workspaceID):
         deleteWorkspace(parms.workspaceID)
+    if (parms.listLogs and parms.workspaceID):
+        listLogs(parms.workspaceID)

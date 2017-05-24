@@ -1,6 +1,6 @@
 {
     "credentials": {
-        "version": "2017-02-03",
+        "version": "2017-04-21",
         "password": "password-token",
         "username": "username-token"
     }

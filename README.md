@@ -30,9 +30,12 @@ DELETE an existing workspace:
 
 CREATE a new workspace (with intents, entities etc. read from existing workspace file):
 -c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace
+
+List LOGS for a specific workspace
+-logs -id workspaceID
 ```
 
-See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code.
+See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The `-logs` command is not yet shown.
 
 
 # Documentation and Resources
