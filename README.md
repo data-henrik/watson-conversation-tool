@@ -10,7 +10,7 @@ This project is described in the following blog posts:
 The tool consists of a single Python script, `wctool.py`. In order to use it, you need Python and the SDK for the Watson services installed.
 
 If you have been working with the Watson service and Python before, you probably already have everything installed. If not, you need to install Python and then head over to the [Watson Developer Tools](https://www.ibm.com/watson/developercloud/developer-tools.html) and follow the link to the [Python SDK](https://github.com/watson-developer-cloud/python-sdk). Install the SDK, too. Now download a copy of this repository or clone it.   
-To use the tool, copy `config.json.sample` to `config.json` and insert your service credentials.
+To use the tool, copy `config.json.sample` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Bluemix region. It is shown as part of the credentials.
 
 Some commands and parameters:
 ```
@@ -33,9 +33,12 @@ CREATE a new workspace (with intents, entities etc. read from existing workspace
 
 List LOGS for a specific workspace
 -logs -id workspaceID
+
+Have DIALOG using a specific workspace
+-dialog -id workspaceID
 ```
 
-See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The `-logs` command is not yet shown.
+See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The `-logs` and `-dialog` commands are not yet shown.
 
 
 # Documentation and Resources

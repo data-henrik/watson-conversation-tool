@@ -19,7 +19,8 @@ with open("config.json") as confFile:
 conversation = ConversationV1(
     username=config['username'],
     password=config['password'],
-    version=config['version']
+    version=config['version'],
+    url=config['url']
     )
 
 
@@ -34,6 +35,7 @@ def getParameters(args=None):
     parser.add_argument("-d",dest='deleteWorkspace', action='store_true', help='delete workspace')
     parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
     parser.add_argument("-logs",dest='listLogs', action='store_true', help='list logs')
+    parser.add_argument("-dialog",dest='dialog', action='store_true', help='have dialog')
     parser.add_argument("-full",dest='fullWorkspace', action='store_true', help='get the full workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
     parser.add_argument("-o",dest='outFile', help='Workspace Output File')
@@ -140,6 +142,40 @@ def deleteWorkspace(workspaceID):
 def listLogs(workspaceID):
     print(json.dumps(conversation.list_logs(workspace_id=workspaceID), indent=2))
 
+# Start a dialog and converse with Watson
+def converse(workspaceID):
+
+  print "Starting a conversation, stop by Ctrl+C or saying 'bye'"
+  print "======================================================"
+  # Start with an empty context object
+  context={}
+
+ # Now loop to chat
+  while True:
+    # get some input
+    minput = raw_input("\nPlease enter your input message:\n")
+    # if we catch a "bye" then exit
+    if (minput == "bye"):
+      break
+    # send the input to Watson Conversation
+    # Set alternate_intents to False for less output
+    resp=conversation.message(workspace_id=workspaceID,
+                             message_input={'text': minput},
+                             alternate_intents=True,
+                             context=context,
+                             entities=None,
+                             intents=None,
+                             output=None)
+
+    # Save returned context for next round of conversation
+    context=resp['context']
+
+    # Dump the returned answer
+    print ""
+    print "Full response object:"
+    print "---------------------"
+    print(json.dumps(resp, indent=2))
+
 
 
 #
@@ -147,7 +183,8 @@ def listLogs(workspaceID):
 #
 if __name__ == '__main__':
     parms = getParameters()
-    print parms
+    # enable next line to print parameters
+    # print parms
     if (parms.listWorkspaces):
         listWorkspaces()
     if (parms.getWorkspace and parms.workspaceID):
@@ -175,3 +212,5 @@ if __name__ == '__main__':
         deleteWorkspace(parms.workspaceID)
     if (parms.listLogs and parms.workspaceID):
         listLogs(parms.workspaceID)
+    if (parms.dialog and parms.workspaceID):
+        converse(parms.workspaceID)

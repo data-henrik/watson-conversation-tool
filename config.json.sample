@@ -2,6 +2,8 @@
     "credentials": {
         "version": "2017-04-21",
         "password": "password-token",
-        "username": "username-token"
+        "username": "username-token",
+        "url": "https://gateway-fra.watsonplatform.net/conversation/api"
+        #"url": "https://gateway.watsonplatform.net/conversation/api"
     }
 }
