@@ -32,14 +32,14 @@ DELETE an existing workspace:
 CREATE a new workspace (with intents, entities etc. read from existing workspace file):
 -c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace
 
-List LOGS for a specific workspace
--logs -id workspaceID
+List LOGS for a specific workspace with an optional filter string
+-logs -id workspaceID -filter filter-string
 
 Have DIALOG using a specific workspace
 -dialog -id workspaceID
 ```
 
-See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The `-logs` and `-dialog` commands are not yet shown.
+See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The [filter expressions](https://www.ibm.com/watson/developercloud/doc/conversation/filter-reference.html) are documented as part of the Watson Conversation service.
 
 
 # Documentation and Resources

@@ -43,6 +43,7 @@ def getParameters(args=None):
     parser.add_argument("-name",dest='wsName', help='Workspace Name')
     parser.add_argument("-desc",dest='wsDescription', help='Workspace Description')
     parser.add_argument("-lang",dest='wsLang', help='Workspace Language')
+    parser.add_argument("-filter",dest='filter', help='filter query')
     parser.add_argument("-intents",dest='wsIntents', action='store_true', help='Update Intents')
     parser.add_argument("-entities",dest='wsEntities', action='store_true', help='Update Entities')
     parser.add_argument("-dialog_nodes",dest='wsDialogNodes', action='store_true', help='Update Dialog Nodes')
@@ -139,8 +140,8 @@ def deleteWorkspace(workspaceID):
 
 # List logs for a specific workspace by ID
 # For now just dump them, do not filter, do not store
-def listLogs(workspaceID):
-    print(json.dumps(conversation.list_logs(workspace_id=workspaceID), indent=2))
+def listLogs(workspaceID, filter):
+    print(json.dumps(conversation.list_logs(workspace_id=workspaceID,filter=filter), indent=2))
 
 # Start a dialog and converse with Watson
 def converse(workspaceID):
@@ -211,6 +212,6 @@ if __name__ == '__main__':
     if (parms.deleteWorkspace and parms.workspaceID):
         deleteWorkspace(parms.workspaceID)
     if (parms.listLogs and parms.workspaceID):
-        listLogs(parms.workspaceID)
+        listLogs(parms.workspaceID,filter=parms.filter)
     if (parms.dialog and parms.workspaceID):
         converse(parms.workspaceID)
