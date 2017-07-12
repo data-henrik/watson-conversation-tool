@@ -41,6 +41,10 @@ Have DIALOG using a specific workspace
 
 See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The [filter expressions](https://www.ibm.com/watson/developercloud/doc/conversation/filter-reference.html) are documented as part of the Watson Conversation service.
 
+### Dialog option and contexts
+When using the dialog option, the current session context is stored (persisted) in `session_context.json`. It allows to continue a session later on. The file is closed after writing out the current context. After the new message input is obtained from the user, the file `session_context.json` is opened again and its content retrieved. This allows to modify the context object between dialog turns. Context variables can be set, modified or deleted. This includes system variables. Use with caution... :)
+
+
 
 # Documentation and Resources
 Here are some useful links to documentation and other resources:

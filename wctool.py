@@ -44,6 +44,7 @@ def getParameters(args=None):
     parser.add_argument("-desc",dest='wsDescription', help='Workspace Description')
     parser.add_argument("-lang",dest='wsLang', help='Workspace Language')
     parser.add_argument("-filter",dest='filter', help='filter query')
+    parser.add_argument("-context",dest='context', help='context file')
     parser.add_argument("-intents",dest='wsIntents', action='store_true', help='Update Intents')
     parser.add_argument("-entities",dest='wsEntities', action='store_true', help='Update Entities')
     parser.add_argument("-dialog_nodes",dest='wsDialogNodes', action='store_true', help='Update Dialog Nodes')
@@ -144,20 +145,32 @@ def listLogs(workspaceID, filter):
     print(json.dumps(conversation.list_logs(workspace_id=workspaceID,filter=filter), indent=2))
 
 # Start a dialog and converse with Watson
-def converse(workspaceID):
-
+def converse(workspaceID,contextFile=None):
+  contextFile="session_context.json"
   print "Starting a conversation, stop by Ctrl+C or saying 'bye'"
   print "======================================================"
   # Start with an empty context object
   context={}
 
- # Now loop to chat
+  ## Load conversation context on start or not?
+  contextStart = raw_input("Start with empty context? (Y/n)\n")
+  if (contextStart == "n" or contextStart == "N"):
+      with open(contextFile) as jsonFile:
+          context=json.load(jsonFile)
+          jsonFile.close()
+
+  # Now loop to chat
   while True:
     # get some input
     minput = raw_input("\nPlease enter your input message:\n")
     # if we catch a "bye" then exit
     if (minput == "bye"):
       break
+      
+    # Read the session context from file
+    with open(contextFile) as jsonFile:
+        context=json.load(jsonFile)
+        jsonFile.close()
     # send the input to Watson Conversation
     # Set alternate_intents to False for less output
     resp=conversation.message(workspace_id=workspaceID,
@@ -176,7 +189,10 @@ def converse(workspaceID):
     print "Full response object:"
     print "---------------------"
     print(json.dumps(resp, indent=2))
-
+    # Persist the current context object to file.
+    with open(contextFile,'w') as jsonFile:
+        json.dump(context, jsonFile, indent=2)
+    jsonFile.close()
 
 
 #
