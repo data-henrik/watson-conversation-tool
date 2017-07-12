@@ -166,10 +166,15 @@ def converse(workspaceID,contextFile=None):
     # if we catch a "bye" then exit
     if (minput == "bye"):
       break
-      
+
     # Read the session context from file
-    with open(contextFile) as jsonFile:
-        context=json.load(jsonFile)
+    try:
+        with open(contextFile) as jsonFile:
+           context=json.load(jsonFile)
+    except IOError:
+        # do nothing
+        print "ignoring"
+    else:
         jsonFile.close()
     # send the input to Watson Conversation
     # Set alternate_intents to False for less output
