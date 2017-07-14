@@ -6,6 +6,7 @@ This project is described in the following blog posts:
 * [Manage Your Watson Conversations from the Command Line or App](http://blog.4loeser.net/2017/03/manage-your-watson-conversations-from.html)
 * [Watson Conversation: How to Manage Workspaces](https://www.ibm.com/blogs/bluemix/2017/04/watson-conversation-manage-workspaces/)
 * [Updates to Chatbot API and Tooling](http://blog.4loeser.net/2017/05/updates-to-chatbot-api-and-tooling.html)
+* [Chatbots: Testing Contexts](http://blog.4loeser.net/2017/07/chatbots-testing-contexts.html)
 
 # Overview
 The tool consists of a single Python script, `wctool.py`. In order to use it, you need Python and the SDK for the Watson services installed.
