@@ -13,7 +13,8 @@ The tool consists of a single Python script, `wctool.py`. In order to use it, yo
 
 If you have been working with the Watson service and Python before, you probably already have everything installed. If not, you need to install Python and then head over to the [Watson Developer Tools](https://www.ibm.com/watson/developercloud/developer-tools.html) and follow the link to the [Python SDK](https://github.com/watson-developer-cloud/python-sdk). Install the SDK, too. Now download a copy of this repository or clone it.   
 To use the tool, copy `config.json.sample` or `config.json.ICFsample` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials.   
-The tool supports server actions in Watson Assistant. If present in the config file, the tool will pass in the IBM Cloud Functions credentials. As a starter, use `config.json.ICFsample`
+
+The tool supports server actions in Watson Assistant. If present in the config file, the tool will pass in the IBM Cloud Functions credentials. As a starter, use `config.json.ICFsample`. The option was introduced to work on this [tutorial for a database-backed Slackbot which makes use of IBM Cloud Functions](https://console.bluemix.net/docs/tutorials/slack-chatbot-database-watson.html).
 
 Some commands and parameters:
 ```
