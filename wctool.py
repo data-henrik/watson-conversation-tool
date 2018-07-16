@@ -213,7 +213,6 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
 
     # Persist the current context object to file.
     with open(contextFile,'w') as jsonFile:
-        print "dumping context"
         json.dump(context, jsonFile, indent=2)
     jsonFile.close()
 
