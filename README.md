@@ -50,7 +50,7 @@ When using the dialog option, the current session context is stored (persisted) 
 
 The optional parameter `-outputonly` lets the tool only dump the returned text output, not the entire response object. This is useful when testing the output or showcasing a dialog from the command line.
 
-
+![](conversation1.png)
 
 # Documentation and Resources
 Here are some useful links to documentation and other resources:
