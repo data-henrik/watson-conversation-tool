@@ -5,5 +5,6 @@
         "username": "username-token",
         "url": "https://gateway-fra.watsonplatform.net/conversation/api"
         #"url": "https://gateway.watsonplatform.net/conversation/api"
-    }
+    },
+    "ICF_KEY": "key token for IBM Cloud Functions"
 }

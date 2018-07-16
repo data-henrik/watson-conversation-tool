@@ -11,16 +11,22 @@ import json, argparse
 from os.path import join, dirname
 from watson_developer_cloud import ConversationV1
 
+privcontext=None
 # Credentials are read from a file
 with open("config.json") as confFile:
-     config=json.load(confFile)['credentials']
+     config=json.load(confFile)
+     configWA=config['credentials']
+     if 'ICF_KEY' in config:
+         icf_key=config['ICF_KEY'].split(':')
+         privcontext={"private": {"icfcreds": {"user": icf_key[0], "password": icf_key[1]}}}
 
-# Initialize the Conversation client
+
+# Initialize the Watson Assistant client
 conversation = ConversationV1(
-    username=config['username'],
-    password=config['password'],
-    version=config['version'],
-    url=config['url']
+    username=configWA['username'],
+    password=configWA['password'],
+    version=configWA['version'],
+    url=configWA['url']
     )
 
 
@@ -36,6 +42,7 @@ def getParameters(args=None):
     parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
     parser.add_argument("-logs",dest='listLogs', action='store_true', help='list logs')
     parser.add_argument("-dialog",dest='dialog', action='store_true', help='have dialog')
+    parser.add_argument("-outputonly",dest='outputOnly', action='store_true', help='print dialog output only')
     parser.add_argument("-full",dest='fullWorkspace', action='store_true', help='get the full workspace')
     parser.add_argument("-id",dest='workspaceID', help='Workspace ID')
     parser.add_argument("-o",dest='outFile', help='Workspace Output File')
@@ -145,7 +152,7 @@ def listLogs(workspaceID, filter):
     print(json.dumps(conversation.list_logs(workspace_id=workspaceID,filter=filter), indent=2))
 
 # Start a dialog and converse with Watson
-def converse(workspaceID,contextFile=None):
+def converse(workspaceID, outputOnly=None, contextFile=None):
   contextFile="session_context.json"
   print "Starting a conversation, stop by Ctrl+C or saying 'bye'"
   print "======================================================"
@@ -176,7 +183,12 @@ def converse(workspaceID,contextFile=None):
         print "ignoring"
     else:
         jsonFile.close()
-    # send the input to Watson Conversation
+
+    # Process IBM Cloud Function credentials if present
+    if privcontext is not None:
+        context.update(privcontext)
+
+    # send the input to Watson Assistant
     # Set alternate_intents to False for less output
     resp=conversation.message(workspace_id=workspaceID,
                              message_input={'text': minput},
@@ -190,12 +202,18 @@ def converse(workspaceID,contextFile=None):
     context=resp['context']
 
     # Dump the returned answer
-    print ""
-    print "Full response object:"
-    print "---------------------"
-    print(json.dumps(resp, indent=2))
+    if (outputOnly):
+        print "Response:"
+        print(json.dumps(resp["output"]["text"], indent=2))
+    else:
+        print ""
+        print "Full response object:"
+        print "---------------------"
+        print(json.dumps(resp, indent=2))
+
     # Persist the current context object to file.
     with open(contextFile,'w') as jsonFile:
+        print "dumping context"
         json.dump(context, jsonFile, indent=2)
     jsonFile.close()
 
@@ -235,4 +253,4 @@ if __name__ == '__main__':
     if (parms.listLogs and parms.workspaceID):
         listLogs(parms.workspaceID,filter=parms.filter)
     if (parms.dialog and parms.workspaceID):
-        converse(parms.workspaceID)
+        converse(parms.workspaceID, parms.outputOnly)
