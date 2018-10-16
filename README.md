@@ -31,7 +31,7 @@ UPDATE an existing workspace (with optionally intents, entities, etc. read from 
   [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-i input-workspace]
 
 DELETE an existing workspace:
--d -id workspaceID
+-delete -id workspaceID
 
 CREATE a new workspace (with intents, entities etc. read from existing workspace file):
 -c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace

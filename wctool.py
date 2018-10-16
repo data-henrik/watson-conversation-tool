@@ -1,15 +1,15 @@
-# Copyright 2017 IBM Corp. All Rights Reserved.
+# Copyright 2017-2018 IBM Corp. All Rights Reserved.
 # See LICENSE for details.
 #
 # Author: Henrik Loeser
 #
-# Manage workspaces for IBM Watson Conversation service on IBM Bluemix.
+# Manage workspaces for IBM Watson Assistant service on IBM Cloud.
 # See the README for documentation.
 #
 
 import json, argparse
 from os.path import join, dirname
-from watson_developer_cloud import ConversationV1
+from watson_developer_cloud import AssistantV1
 
 privcontext=None
 # Credentials are read from a file
@@ -22,7 +22,7 @@ with open("config.json") as confFile:
 
 
 # Initialize the Watson Assistant client
-conversation = ConversationV1(
+conversation = AssistantV1(
     username=configWA['username'],
     password=configWA['password'],
     version=configWA['version'],
@@ -31,14 +31,14 @@ conversation = ConversationV1(
 
 
 # Define parameters that we want to catch and some basic command help
-def getParameters(args=None):
+def initParser(args=None):
     parser = argparse.ArgumentParser(description='Manage Watson Conversation workspaces',
                                      prog='wctool.py',
-                                     usage='%(prog)s [-h | -l | -g | -c | -u | -d] [options]')
+                                     usage='%(prog)s [-h | -l | -g | -c | -u | -delete] [options]')
     parser.add_argument("-l",dest='listWorkspaces', action='store_true', help='list workspaces')
     parser.add_argument("-c",dest='createWorkspace', action='store_true', help='create workspace')
     parser.add_argument("-u",dest='updateWorkspace', action='store_true', help='update workspace')
-    parser.add_argument("-d",dest='deleteWorkspace', action='store_true', help='delete workspace')
+    parser.add_argument("-delete",dest='deleteWorkspace', action='store_true', help='delete workspace')
     parser.add_argument("-g",dest='getWorkspace', action='store_true', help='get details for single workspace')
     parser.add_argument("-logs",dest='listLogs', action='store_true', help='list logs')
     parser.add_argument("-dialog",dest='dialog', action='store_true', help='have dialog')
@@ -58,23 +58,22 @@ def getParameters(args=None):
     parser.add_argument("-counterexamples",dest='wsCounterexamples', action='store_true', help='Update Counterexamples')
     parser.add_argument("-metadata",dest='wsMetadata', action='store_true', help='Update Metadata')
 
-    parms = parser.parse_args()
-    return parms
+    return parser
 
 # List available dialogs
 def listWorkspaces():
-    print(json.dumps(conversation.list_workspaces(), indent=2))
+    print(json.dumps(conversation.list_workspaces().get_result(), indent=2))
 
 # Get and print a specific workspace by ID
 def getPrintWorkspace(workspaceID,exportWS):
-    print(json.dumps(conversation.get_workspace(workspace_id=workspaceID,export=exportWS), indent=2))
+    print(json.dumps(conversation.get_workspace(workspace_id=workspaceID,export=exportWS).get_result(), indent=2))
 
 # Get a specific workspace by ID and export to file
 def getSaveWorkspace(workspaceID,outFile):
-    ws=conversation.get_workspace(workspace_id=workspaceID,export=True)
+    ws=conversation.get_workspace(workspace_id=workspaceID,export=True).get_result()
     with open(outFile,'w') as jsonFile:
         json.dump(ws, jsonFile, indent=2)
-    print "Workspace saved to " + outFile
+    print ("Workspace saved to " + outFile)
 
 
 # Update a workspace
@@ -124,7 +123,7 @@ def updateWorkspace(workspaceID,
                                     dialog_nodes=payload['dialog_nodes'],
                                     counterexamples=payload['counterexamples'],
                                     metadata=payload['metadata'])
-    print "Workspace updated - new workspace"
+    print ("Workspace updated - new workspace")
     print(json.dumps(ws, indent=2))
 
 # Create a new workspace
@@ -144,7 +143,7 @@ def createWorkspace(newName, newDescription, newLang, inFile):
 # Delete a workspaceID
 def deleteWorkspace(workspaceID):
     conversation.delete_workspace(workspaceID)
-    print "Workspace deleted"
+    print ("Workspace deleted")
 
 # List logs for a specific workspace by ID
 # For now just dump them, do not filter, do not store
@@ -154,8 +153,8 @@ def listLogs(workspaceID, filter):
 # Start a dialog and converse with Watson
 def converse(workspaceID, outputOnly=None, contextFile=None):
   contextFile="session_context.json"
-  print "Starting a conversation, stop by Ctrl+C or saying 'bye'"
-  print "======================================================"
+  print ("Starting a conversation, stop by Ctrl+C or saying 'bye'")
+  print ("======================================================")
   # Start with an empty context object
   context={}
 
@@ -180,7 +179,7 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
            context=json.load(jsonFile)
     except IOError:
         # do nothing
-        print "ignoring"
+        print ("ignoring")
     else:
         jsonFile.close()
 
@@ -191,24 +190,24 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
     # send the input to Watson Assistant
     # Set alternate_intents to False for less output
     resp=conversation.message(workspace_id=workspaceID,
-                             message_input={'text': minput},
+                             input={'text': minput},
                              alternate_intents=True,
                              context=context,
                              entities=None,
                              intents=None,
-                             output=None)
+                             output=None).get_result()
 
     # Save returned context for next round of conversation
     context=resp['context']
 
     # Dump the returned answer
     if (outputOnly):
-        print "Response:"
+        print ("Response:")
         print(json.dumps(resp["output"]["text"], indent=2))
     else:
-        print ""
-        print "Full response object:"
-        print "---------------------"
+        print ("")
+        print ("Full response object:")
+        print ("---------------------")
         print(json.dumps(resp, indent=2))
 
     # Persist the current context object to file.
@@ -221,17 +220,18 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
 # Main program, for now just detect what function to call and invoke it
 #
 if __name__ == '__main__':
-    parms = getParameters()
+    parser = initParser()
+    parms =  parser.parse_args()
     # enable next line to print parameters
     # print parms
     if (parms.listWorkspaces):
         listWorkspaces()
-    if (parms.getWorkspace and parms.workspaceID):
+    elif (parms.getWorkspace and parms.workspaceID):
         if (parms.outFile):
             getSaveWorkspace(parms.workspaceID,parms.outFile)
         else:
             getPrintWorkspace(parms.workspaceID,exportWS=parms.fullWorkspace)
-    if (parms.updateWorkspace and parms.workspaceID):
+    elif (parms.updateWorkspace and parms.workspaceID):
         updateWorkspace(parms.workspaceID,
                         parms.wsName,
                         parms.wsDescription,
@@ -242,14 +242,16 @@ if __name__ == '__main__':
                         parms.wsCounterexamples,
                         parms.wsMetadata,
                         parms.inFile)
-    if (parms.createWorkspace and parms.wsName and parms.wsDescription and parms.wsLang and parms.inFile):
+    elif (parms.createWorkspace and parms.wsName and parms.wsDescription and parms.wsLang and parms.inFile):
         createWorkspace(newName=parms.wsName,
                         newDescription=parms.wsDescription,
                         newLang=parms.wsLang,
                         inFile=parms.inFile)
-    if (parms.deleteWorkspace and parms.workspaceID):
+    elif (parms.deleteWorkspace and parms.workspaceID):
         deleteWorkspace(parms.workspaceID)
-    if (parms.listLogs and parms.workspaceID):
+    elif (parms.listLogs and parms.workspaceID):
         listLogs(parms.workspaceID,filter=parms.filter)
-    if (parms.dialog and parms.workspaceID):
+    elif (parms.dialog and parms.workspaceID):
         converse(parms.workspaceID, parms.outputOnly)
+    else:
+        parser.print_usage()
