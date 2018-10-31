@@ -206,7 +206,7 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
 
     # Save returned context for next round of conversation
     context=resp['context']
-    if 'actions' in resp:
+    if ('actions' in resp and len(resp['actions']) and resp['actions'][0]['type']=='client'):
         # Dump the returned answer
         if not outputOnly:
             print ("")
