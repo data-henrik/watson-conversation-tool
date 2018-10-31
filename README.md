@@ -8,6 +8,7 @@ This project is described in the following blog posts:
 * [Updates to Chatbot API and Tooling](https://blog.4loeser.net/2017/05/updates-to-chatbot-api-and-tooling.html)
 * [Chatbots: Testing Contexts](https://blog.4loeser.net/2017/07/chatbots-testing-contexts.html)
 * [Extended: Manage and interact with Watson Assistant from the command line](https://blog.4loeser.net/2018/07/extended-manage-and-interact-with.html)
+* [IBM Watson Assistant: Chatbot tool now supports testing client actions](https://blog.4loeser.net/2018/10/ibm-watson-assistant-chatbot-tool-now.html)
 
 # Overview
 The tool consists of a single Python script, `wctool.py`. In order to use it, you need Python and the SDK for the Watson services installed.
