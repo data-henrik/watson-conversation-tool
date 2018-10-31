@@ -7,7 +7,7 @@
 # See the README for documentation.
 #
 
-import json, argparse
+import json, argparse, importlib
 from os.path import join, dirname
 from watson_developer_cloud import AssistantV1
 
@@ -50,6 +50,7 @@ def initParser(args=None):
     parser.add_argument("-name",dest='wsName', help='Workspace Name')
     parser.add_argument("-desc",dest='wsDescription', help='Workspace Description')
     parser.add_argument("-lang",dest='wsLang', help='Workspace Language')
+    parser.add_argument("-actionmodule",dest='actionModule', help='Module for client action handling')
     parser.add_argument("-filter",dest='filter', help='filter query')
     parser.add_argument("-context",dest='context', help='context file')
     parser.add_argument("-intents",dest='wsIntents', action='store_true', help='Update Intents')
@@ -157,10 +158,12 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
   print ("======================================================")
   # Start with an empty context object
   context={}
+  first=True
 
   ## Load conversation context on start or not?
   contextStart = raw_input("Start with empty context? (Y/n)\n")
   if (contextStart == "n" or contextStart == "N"):
+      print ("loading old session context...")
       with open(contextFile) as jsonFile:
           context=json.load(jsonFile)
           jsonFile.close()
@@ -173,15 +176,19 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
     if (minput == "bye"):
       break
 
-    # Read the session context from file
-    try:
-        with open(contextFile) as jsonFile:
-           context=json.load(jsonFile)
-    except IOError:
-        # do nothing
-        print ("ignoring")
+    # Read the session context from file if we are not entering the loop
+    # for the first time
+    if not first:
+        try:
+            with open(contextFile) as jsonFile:
+                context=json.load(jsonFile)
+        except IOError:
+            # do nothing
+            print ("ignoring")
+        else:
+            jsonFile.close()
     else:
-        jsonFile.close()
+        first=False
 
     # Process IBM Cloud Function credentials if present
     if privcontext is not None:
@@ -199,6 +206,30 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
 
     # Save returned context for next round of conversation
     context=resp['context']
+    if 'actions' in resp:
+        # Dump the returned answer
+        if not outputOnly:
+            print ("")
+            print ("Full response object of intermediate step:")
+            print ("------------------------------------------")
+            print(json.dumps(resp, indent=2))
+        
+        if (hca is not None):
+            contextNew=hca.handleClientActions(context,resp['actions'])
+        
+            # call Watson Assistant with result from client action(s)
+            resp=conversation.message(workspace_id=workspaceID,
+                             input=resp['input'],
+                             alternate_intents=True,
+                             context=contextNew,
+                             entities=resp['entities'],
+                             intents=resp['intents'],
+                             output=resp['output']).get_result()
+            context=resp['context']
+        else:
+            print("\n\nplease use -actionmodule to define module to handle client actions")
+            break
+
 
     # Dump the returned answer
     if (outputOnly):
@@ -220,6 +251,10 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
 # Main program, for now just detect what function to call and invoke it
 #
 if __name__ == '__main__':
+    # Assume no module for client actions
+    hca=None
+
+    # initialize parser
     parser = initParser()
     parms =  parser.parse_args()
     # enable next line to print parameters
@@ -252,6 +287,8 @@ if __name__ == '__main__':
     elif (parms.listLogs and parms.workspaceID):
         listLogs(parms.workspaceID,filter=parms.filter)
     elif (parms.dialog and parms.workspaceID):
+        if parms.actionModule:
+            hca=importlib.import_module(parms.actionModule)
         converse(parms.workspaceID, parms.outputOnly)
     else:
         parser.print_usage()
