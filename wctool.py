@@ -215,7 +215,7 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
             print(json.dumps(resp, indent=2))
         
         if (hca is not None):
-            contextNew=hca.handleClientActions(context,resp['actions'])
+            contextNew=hca.handleClientActions(context,resp['actions'], resp)
         
             # call Watson Assistant with result from client action(s)
             resp=conversation.message(workspace_id=workspaceID,
