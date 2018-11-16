@@ -46,6 +46,7 @@ See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for
 
 ### Dialog option and contexts
 When using the dialog option, the current session context is stored (persisted) in `session_context.json`. It allows to continue a session later on. The file is closed after writing out the current context. After the new message input is obtained from the user, the file `session_context.json` is opened again and its content retrieved. This allows to modify the context object between dialog turns. Context variables can be set, modified or deleted. This includes system variables. Use with caution... :)   
+The stored session context can even be used to switch to different workspaces or even instances with every dialog turn. It helps command line testing of duplicated / replicated chatbots for highly available apps.
 
 The optional parameter `-outputonly` lets the tool only dump the returned text output, not the entire response object. This is useful when testing the output or showcasing a dialog from the command line.
 
