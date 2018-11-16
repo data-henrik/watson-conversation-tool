@@ -149,7 +149,7 @@ def deleteWorkspace(workspaceID):
 # List logs for a specific workspace by ID
 # For now just dump them, do not filter, do not store
 def listLogs(workspaceID, filter):
-    print(json.dumps(conversation.list_logs(workspace_id=workspaceID,filter=filter), indent=2))
+    print(json.dumps(conversation.list_logs(workspace_id=workspaceID,filter=filter).get_result(), indent=2))
 
 # Start a dialog and converse with Watson
 def converse(workspaceID, outputOnly=None, contextFile=None):
