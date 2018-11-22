@@ -22,12 +22,22 @@ with open("config.json") as confFile:
 
 
 # Initialize the Watson Assistant client
-conversation = AssistantV1(
-    username=configWA['username'],
-    password=configWA['password'],
-    version=configWA['version'],
-    url=configWA['url']
+if 'username' in configWA:
+    conversation = AssistantV1(
+        username=configWA['username'],
+        password=configWA['password'],
+        version=configWA['version'],
+        url=configWA['url']
     )
+elif 'apikey' in configWA:
+    conversation = AssistantV1(
+        iam_apikey=configWA['apikey'],
+        version=configWA['version'],
+        url=configWA['url']
+    )
+else:
+    print('Expected either username / password or apikey in credentials.')
+    exit
 
 
 # Define parameters that we want to catch and some basic command help
