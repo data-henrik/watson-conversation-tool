@@ -53,7 +53,7 @@ def initParser(args=None):
 
 # Start a dialog and converse with Watson
 def converse(assistantID, outputOnly=None, contextFile=None):
-  contextFile="session_context.json"
+  contextFile="session_contextV2.json"
   print ("Starting a conversation, stop by Ctrl+C or saying 'bye'")
   print ("======================================================")
   # Start with an empty context object
@@ -119,8 +119,7 @@ def converse(assistantID, outputOnly=None, contextFile=None):
     # Save returned context for next round of conversation
     if ('context' in resp):
         context=resp['context']
-    else:
-        context=None
+    
 
     respOutput=resp['output']
 

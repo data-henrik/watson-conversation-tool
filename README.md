@@ -14,10 +14,14 @@ This project is described in the following blog posts:
 * [IBM Watson Assistant: Chatbot tool now supports testing client actions](https://blog.4loeser.net/2018/10/ibm-watson-assistant-chatbot-tool-now.html)
 
 # Overview
-The tool consists of a single Python script, `wctool.py`. In order to use it, you need Python and the SDK for the Watson services installed.
+The repository holds two tools, both Python scripts. In order to use them, you need Python and the SDK for the Watson services installed. The tools are:
+* [`wctool.py`](wctool.py): The original Watson Conversation Tool which is based on [API version V1](https://console.bluemix.net/apidocs/assistant?language=python). It allows to manage (list, import, export, ...) workspaces, obtain logs and via its dialog option to converse with the chat service.
+* [`watoolV2.py`](watoolV2.py): The newer script to have a dialog with the Watson Assistant service, based on [API version V2](https://console.bluemix.net/apidocs/assistant-v2?language=python#introduction).
 
 If you have been working with the Watson service and Python before, you probably already have everything installed. If not, you need to install Python and then head over to the [Watson Developer Tools](https://www.ibm.com/watson/developercloud/developer-tools.html) and follow the link to the [Python SDK](https://github.com/watson-developer-cloud/python-sdk). Install the SDK, too. Now download a copy of this repository or clone it.   
-To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials.    
+
+## wctool.py
+To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. Either username / password or the API key are needed.    
 
 Some commands and parameters:
 ```
@@ -47,15 +51,24 @@ Have DIALOG using a specific workspace
 
 See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The [filter expressions](https://www.ibm.com/watson/developercloud/doc/conversation/filter-reference.html) are documented as part of the Watson Conversation service.
 
-### Dialog option and contexts
-When using the dialog option, the current session context is stored (persisted) in `session_context.json`. It allows to continue a session later on. The file is closed after writing out the current context. After the new message input is obtained from the user, the file `session_context.json` is opened again and its content retrieved. This allows to modify the context object between dialog turns. Context variables can be set, modified or deleted. This includes system variables. Use with caution... :)   
+## watoolV2.py
+To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. Note that to use both tools with the same config file the API version for this **watoolV2** needs to be assigned to the key **versionV2**.   
+
+Some commands and parameters:
+```
+Have DIALOG using a specific workspace
+-dialog -id assistantID [-outputonly] -[-actionmodule file]
+```
+
+## Dialog option and contexts
+When using the dialog option, the current session context is stored (persisted) in `session_context.json` or `session_contextV2.json`. It allows to continue a session later on. The file is closed after writing out the current context. After the new message input is obtained from the user, the file `session_context.json` / `session_contextV2.json` is opened again and its content retrieved. This allows to modify the context object between dialog turns. Context variables can be set, modified or deleted. This includes system variables. Use with caution... :)   
 The stored session context can even be used to switch to different workspaces or even instances with every dialog turn. It helps command line testing of duplicated / replicated chatbots for highly available apps.
 
 The optional parameter `-outputonly` lets the tool only dump the returned text output, not the entire response object. This is useful when testing the output or showcasing a dialog from the command line.
 
 The tool supports server actions in Watson Assistant. If present in the config file, the tool will pass in the IBM Cloud Functions credentials. As a starter, use `config.ICFsample.json`. The option was introduced to work on this [tutorial for a database-backed Slackbot which makes use of IBM Cloud Functions](https://console.bluemix.net/docs/tutorials/slack-chatbot-database-watson.html).
 
-The tool also supports client actions. You can pass in the file to handle client actions using `-actionmodule filename`. A sample module is shown in file [`handleClientAction.sample.py`](handleClientAction.sample.py). It could be dynamically loaded using `-actionmodule handleClientAction.sample`. Note that the file extension `.py` is not passed in.
+The tool also supports client actions. You can pass in the file to handle client actions using `-actionmodule filename`. A sample module is shown in file [`handleClientAction.sample.py`](handleClientAction.sample.py) and [`handleClientActionV2.sample.py`](handleClientActionV2.sample.py). It could be dynamically loaded using, e.g., `-actionmodule handleClientAction.sample`. Note that the file extension `.py` is not passed in.
 
 ![](conversation1.png)
 
