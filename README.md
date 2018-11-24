@@ -21,7 +21,7 @@ The repository holds two tools, both Python scripts. In order to use them, you n
 If you have been working with the Watson service and Python before, you probably already have everything installed. If not, you need to install Python and then head over to the [Watson Developer Tools](https://www.ibm.com/watson/developercloud/developer-tools.html) and follow the link to the [Python SDK](https://github.com/watson-developer-cloud/python-sdk). Install the SDK, too. Now download a copy of this repository or clone it.   
 
 ## wctool.py
-To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. Either username / password or the API key are needed.    
+To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. Either username / password or the API key are needed. If you have multiple environments then you can specify the configuration file using the `-config myconfig.json` option.    
 
 Some commands and parameters:
 ```
@@ -52,12 +52,12 @@ Have DIALOG using a specific workspace
 See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The [filter expressions](https://www.ibm.com/watson/developercloud/doc/conversation/filter-reference.html) are documented as part of the Watson Conversation service.
 
 ## watoolV2.py
-To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. Note that to use both tools with the same config file the API version for this **watoolV2** needs to be assigned to the key **versionV2**.   
+To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. Note that to use both tools with the same config file the API version for this **watoolV2** needs to be assigned to the key **versionV2**.  If you have multiple environments then you can specify the configuration file using the `-config myconfig.json` option.  
 
 Some commands and parameters:
 ```
 Have DIALOG using a specific workspace
--dialog -id assistantID [-outputonly] -[-actionmodule file]
+-dialog -id assistantID [-outputonly] -[-actionmodule file] [-config configuration-file]
 ```
 
 ## Dialog option and contexts

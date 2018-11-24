@@ -12,32 +12,35 @@ from os.path import join, dirname
 from watson_developer_cloud import AssistantV1
 
 privcontext=None
-# Credentials are read from a file
-with open("config.json") as confFile:
-     config=json.load(confFile)
-     configWA=config['credentials']
-     if 'ICF_KEY' in config:
-         icf_key=config['ICF_KEY'].split(':')
-         privcontext={"private": {"icfcreds": {"user": icf_key[0], "password": icf_key[1]}}}
+conversation=None
 
+def loadAndInit(confFile=None):
+    # Credentials are read from a file
+    with open(confFile) as confFile:
+        config=json.load(confFile)
+        configWA=config['credentials']
+        if 'ICF_KEY' in config:
+            icf_key=config['ICF_KEY'].split(':')
+            privcontext={"private": {"icfcreds": {"user": icf_key[0], "password": icf_key[1]}}}
 
-# Initialize the Watson Assistant client
-if 'username' in configWA:
-    conversation = AssistantV1(
-        username=configWA['username'],
-        password=configWA['password'],
-        version=configWA['version'],
-        url=configWA['url']
-    )
-elif 'apikey' in configWA:
-    conversation = AssistantV1(
-        iam_apikey=configWA['apikey'],
-        version=configWA['version'],
-        url=configWA['url']
-    )
-else:
-    print('Expected either username / password or apikey in credentials.')
-    exit
+    # Initialize the Watson Assistant client
+    global conversation
+    if 'username' in configWA:
+        conversation = AssistantV1(
+            username=configWA['username'],
+            password=configWA['password'],
+            version=configWA['version'],
+            url=configWA['url']
+        )
+    elif 'apikey' in configWA:
+        conversation = AssistantV1(
+            iam_apikey=configWA['apikey'],
+            version=configWA['version'],
+            url=configWA['url']
+        )
+    else:
+        print('Expected either username / password or apikey in credentials.')
+        exit
 
 
 # Define parameters that we want to catch and some basic command help
@@ -68,6 +71,7 @@ def initParser(args=None):
     parser.add_argument("-dialog_nodes",dest='wsDialogNodes', action='store_true', help='Update Dialog Nodes')
     parser.add_argument("-counterexamples",dest='wsCounterexamples', action='store_true', help='Update Counterexamples')
     parser.add_argument("-metadata",dest='wsMetadata', action='store_true', help='Update Metadata')
+    parser.add_argument("-config",dest='confFile', default='config.json', help='configuration file')
 
     return parser
 
@@ -267,8 +271,13 @@ if __name__ == '__main__':
     # initialize parser
     parser = initParser()
     parms =  parser.parse_args()
+
     # enable next line to print parameters
     # print parms
+
+    # load configuration and initialize Watson
+    loadAndInit(confFile=parms.confFile)
+
     if (parms.listWorkspaces):
         listWorkspaces()
     elif (parms.getWorkspace and parms.workspaceID):
