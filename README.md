@@ -34,7 +34,7 @@ GET (full) information about a workspace and print or save it
 
 UPDATE an existing workspace (with optionally intents, entities, etc. read from existing workspace file), replace by default or optionally append:
 -u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
-  [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata]  [-append]
+  [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-append]
   [-i input-workspace] [-config config-file]
 
 DELETE an existing workspace:
