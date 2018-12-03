@@ -26,27 +26,27 @@ To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config
 Some commands and parameters:
 ```
 LIST all workspaces:
--l
+-l  [-config config-file]
 
 GET (full) information about a workspace and print or save it
--g -id workspaceID -full       
--g -id workspaceID -o outfile
+-g -id workspaceID -full  [-config config-file]      
+-g -id workspaceID -o outfile  [-config config-file]
 
 UPDATE an existing workspace (with optionally intents, entities, etc. read from existing workspace file):
 -u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
-  [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-i input-workspace]
+  [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-i input-workspace] [-config config-file]
 
 DELETE an existing workspace:
--delete -id workspaceID
+-delete -id workspaceID  [-config config-file]
 
 CREATE a new workspace (with intents, entities etc. read from existing workspace file):
--c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace
+-c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace [-config config-file]
 
 List LOGS for a specific workspace with an optional filter string
--logs -id workspaceID -filter filter-string
+-logs -id workspaceID -filter filter-string  [-config config-file]
 
 Have DIALOG using a specific workspace
--dialog -id workspaceID [-outputonly] -[-actionmodule file]
+-dialog -id workspaceID [-outputonly] -[-actionmodule file] [-config config-file]
 ```
 
 See the included Jupyter Notebook [SampleSession.ipynb](SampleSession.ipynb) for details on how to invoke the commands. Note that in the current state the tool prints out the values for all possible options for debugging purposes. This could be simply disabled in the code. The [filter expressions](https://www.ibm.com/watson/developercloud/doc/conversation/filter-reference.html) are documented as part of the Watson Conversation service.
@@ -57,7 +57,7 @@ To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config
 Some commands and parameters:
 ```
 Have DIALOG using a specific workspace
--dialog -id assistantID [-outputonly] -[-actionmodule file] [-config configuration-file]
+-dialog -id assistantID [-outputonly] -[-actionmodule file] [-config config-file]
 ```
 
 ## Dialog option and contexts
