@@ -72,6 +72,7 @@ def initParser(args=None):
     parser.add_argument("-counterexamples",dest='wsCounterexamples', action='store_true', help='Update Counterexamples')
     parser.add_argument("-metadata",dest='wsMetadata', action='store_true', help='Update Metadata')
     parser.add_argument("-config",dest='confFile', default='config.json', help='configuration file')
+    parser.add_argument("-append",dest='append', action='store_true', help='append to or replace workspace')
 
     return parser
 
@@ -94,38 +95,40 @@ def getSaveWorkspace(workspaceID,outFile):
 # Update a workspace
 # The workspace parts to be updated were specified as command line options
 def updateWorkspace(workspaceID,
+                    intents,
+                    entities,
+                    dialog_nodes,
+                    counterexamples,
+                    metadata,
                     newName=None,
                     newDescription=None,
                     newLang=None,
-                    intents=None,
-                    entities=None,
-                    dialog_nodes=None,
-                    counterexamples=None,
-                    metadata=None,
-                    inFile=None):
+                    inFile=None,
+                    append=False):
     payload = {'intents': None,
                 'entities': None,
                 'dialog_nodes': None,
                 'counterexamples': None,
-                'metadata': None}
+                'metadata': None,
+                'append': False}
     # Only read from file if specified
     if (inFile is not None):
         with open(inFile) as jsonFile:
             ws=json.load(jsonFile)
         # Read the sections to be updated
-        if intents is not None:
+        if intents:
             payload['intents'] = ws['intents']
 
-        if entities is not None:
+        if entities:
             payload['entities'] = ws['entities']
 
-        if dialog_nodes is not None:
+        if dialog_nodes:
             payload['dialog_nodes'] = ws['dialog_nodes']
 
-        if counterexamples is not None:
+        if counterexamples:
             payload['counterexamples'] = ws['counterexamples']
 
-        if metadata is not None:
+        if metadata:
             payload['metadata'] = ws['metadata']
 
     # Now update the workspace
@@ -137,7 +140,8 @@ def updateWorkspace(workspaceID,
                                     entities=payload['entities'],
                                     dialog_nodes=payload['dialog_nodes'],
                                     counterexamples=payload['counterexamples'],
-                                    metadata=payload['metadata']).get_result()
+                                    metadata=payload['metadata'],
+                                    append=append).get_result()
     print ("Workspace updated - new workspace")
     print(json.dumps(ws, indent=2))
 
@@ -287,15 +291,16 @@ if __name__ == '__main__':
             getPrintWorkspace(parms.workspaceID,exportWS=parms.fullWorkspace)
     elif (parms.updateWorkspace and parms.workspaceID):
         updateWorkspace(parms.workspaceID,
-                        parms.wsName,
-                        parms.wsDescription,
-                        parms.wsLang,
                         parms.wsIntents,
                         parms.wsEntities,
                         parms.wsDialogNodes,
                         parms.wsCounterexamples,
                         parms.wsMetadata,
-                        parms.inFile)
+                        parms.wsName,
+                        parms.wsDescription,
+                        parms.wsLang,
+                        parms.inFile,
+                        parms.append)
     elif (parms.createWorkspace and parms.wsName and parms.wsDescription and parms.wsLang and parms.inFile):
         createWorkspace(newName=parms.wsName,
                         newDescription=parms.wsDescription,
