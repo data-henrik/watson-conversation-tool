@@ -137,7 +137,7 @@ def updateWorkspace(workspaceID,
                                     entities=payload['entities'],
                                     dialog_nodes=payload['dialog_nodes'],
                                     counterexamples=payload['counterexamples'],
-                                    metadata=payload['metadata'])
+                                    metadata=payload['metadata']).get_result()
     print ("Workspace updated - new workspace")
     print(json.dumps(ws, indent=2))
 
@@ -152,7 +152,7 @@ def createWorkspace(newName, newDescription, newLang, inFile):
                                                entities=ws["entities"],
                                                dialog_nodes=ws["dialog_nodes"],
                                                counterexamples=ws["counterexamples"],
-                                               metadata=ws['metadata'])
+                                               metadata=ws['metadata']).get_result()
     print(json.dumps(newWorkspace, indent=2))
 
 # Delete a workspaceID
