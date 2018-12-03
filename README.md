@@ -34,13 +34,15 @@ GET (full) information about a workspace and print or save it
 
 UPDATE an existing workspace (with optionally intents, entities, etc. read from existing workspace file):
 -u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
-  [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-i input-workspace] [-config config-file]
+  [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata]  
+  [-i input-workspace] [-config config-file]
 
 DELETE an existing workspace:
 -delete -id workspaceID  [-config config-file]
 
 CREATE a new workspace (with intents, entities etc. read from existing workspace file):
--c -name workspace-name -desc workspace-description -lang workspace-language -i input-workspace [-config config-file]
+-c -name workspace-name -desc workspace-description -lang workspace-language  
+   -i input-workspace [-config config-file]
 
 List LOGS for a specific workspace with an optional filter string
 -logs -id workspaceID -filter filter-string  [-config config-file]
