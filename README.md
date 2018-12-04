@@ -32,7 +32,7 @@ GET (full) information about a workspace and print or save it
 -g -id workspaceID -full  [-config config-file]      
 -g -id workspaceID -o outfile  [-config config-file]
 
-UPDATE an existing workspace (with optionally intents, entities, etc. read from existing workspace file), replace by default or optionally append:
+UPDATE an existing workspace (with optionally intents, entities, etc. read from existing workspace file), replace content by default or optionally `-append` to the specified types:
 -u -id workspaceID [-name newName] [-lang newLanguage] [-desc newDescription]
   [-intents] [-entities] [-dialog_nodes] [-counterexamples] [-metadata] [-append]
   [-i input-workspace] [-config config-file]

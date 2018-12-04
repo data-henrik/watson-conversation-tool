@@ -20,6 +20,7 @@ def loadAndInit(confFile=None):
         config=json.load(confFile)
         configWA=config['credentials']
         if 'ICF_KEY' in config:
+            global privcontext
             icf_key=config['ICF_KEY'].split(':')
             privcontext={"private": {"icfcreds": {"user": icf_key[0], "password": icf_key[1]}}}
 
