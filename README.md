@@ -1,8 +1,9 @@
-# Watson Conversation Tool
+# Watson Conversation Tool / Watson Assistant Tool
 The Watson Conversation Tool (wctool) is a Python-based command line tool to manage workspaces of the [IBM Watson Assistant (formerly Conversation)](https://www.ibm.com/watson/developercloud/doc/conversation/index.html) service on IBM Cloud. It was written to explore the API to manage workspaces.   
 Note that to manage workspaces from the command line this tool is not a requirement. The [API provides REST functions](https://www.ibm.com/watson/developercloud/conversation/api/v1/?curl#workspaces) that can be invoked from tools like `curl`.
 
-(Update on 2018-11-22) The service Watson Assistant evolved over time. It has introduced the concepts of **skill** and **assistant** instead of **workspace**. It also added an API Version 2. That API interacts with an assistant, requires to open and close a session which manages the context on the server, and only focuses on the conversation. To cater to the API V2, I introduced a second script **watoolV2**. Documentation is following...
+Update on 2018-11-22:  
+The service Watson Assistant evolved over time. It has introduced the concepts of **skill** and **assistant** instead of **workspace**. It also added an API Version 2. That API interacts with an assistant, requires to open and close a session which manages the context on the server, and only focuses on the conversation. To cater to the API V2, I introduced a second script **watoolV2**. Documentation is following...
 
 
 This project is described in the following blog posts:
@@ -12,6 +13,7 @@ This project is described in the following blog posts:
 * [Chatbots: Testing Contexts](https://blog.4loeser.net/2017/07/chatbots-testing-contexts.html)
 * [Extended: Manage and interact with Watson Assistant from the command line](https://blog.4loeser.net/2018/07/extended-manage-and-interact-with.html)
 * [IBM Watson Assistant: Chatbot tool now supports testing client actions](https://blog.4loeser.net/2018/10/ibm-watson-assistant-chatbot-tool-now.html)
+* [Manage and test your chatbot from the command line](https://www.ibm.com/blogs/bluemix/2018/11/manage-and-test-your-chatbot-from-the-command-line/)
 
 # Overview
 The repository holds two tools, both Python scripts. In order to use them, you need Python and the SDK for the Watson services installed. The tools are:
