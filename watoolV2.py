@@ -9,7 +9,8 @@
 
 import json, argparse, importlib
 from os.path import join, dirname
-from watson_developer_cloud import AssistantV2
+from ibm_watson import AssistantV2
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 privcontext=None
 assistantService=None
@@ -22,19 +23,16 @@ def loadAndInit(confFile=None):
 
     global assistantService
     # Initialize the Watson Assistant client, use API V2
-    if 'username' in configWA:
+    if 'apikey' in configWA:
+        # Authentication via IAM
+        authenticator = IAMAuthenticator(configWA['apikey'])
+ 
         assistantService = AssistantV2(
-            username=configWA['username'],
-            password=configWA['password'],
-            version=configWA['versionV2'],
-            url=configWA['url'])
-    elif 'apikey' in configWA:
-        assistantService = AssistantV2(
-            iam_apikey=configWA['apikey'],
-            version=configWA['versionV2'],
-            url=configWA['url'])
+            authenticator=authenticator,
+            version=configWA['versionV2'])
+        assistantService.set_service_url(configWA['url'])
     else:
-        print('Expected either username / password or apikey in credentials.')
+        print('Expected apikey in credentials.')
         exit
 
 
@@ -63,7 +61,7 @@ def converse(assistantID, outputOnly=None, contextFile=None):
     first=True
 
     ## Load conversation context on start or not?
-    contextStart = raw_input("Start with empty context? (Y/n)\n")
+    contextStart = input("Start with empty context? (Y/n)\n")
     if (contextStart == "n" or contextStart == "N"):
         print ("loading old session context...")
         with open(contextFile) as jsonFile:
@@ -81,7 +79,7 @@ def converse(assistantID, outputOnly=None, contextFile=None):
     # Now loop to chat
     while True:
         # get some input
-        minput = raw_input("\nPlease enter your input message:\n")
+        minput = input("\nPlease enter your input message:\n")
         # if we catch a "bye" then exit after deleting the session
         if (minput == "bye"):
             response = assistantService.delete_session(

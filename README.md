@@ -5,6 +5,8 @@ Note that to manage workspaces from the command line this tool is not a requirem
 Update on 2018-11-22:  
 The service Watson Assistant evolved over time. It has introduced the concepts of **skill** and **assistant** instead of **workspace**. It also added an API Version 2. That API interacts with an assistant, requires to open and close a session which manages the context on the server, and only focuses on the conversation. To cater to the API V2, I introduced a second script **watoolV2**. Documentation is following...
 
+Update on 2019-11-27:   
+The IBM Watson services moved to a new core SDK for handling authentication. I updated the code to support the new flow and in that process decided to only support API keys. If something is not working, open an issue please.
 
 This project is described in the following blog posts:
 * [Manage Your Watson Conversations from the Command Line or App](https://blog.4loeser.net/2017/03/manage-your-watson-conversations-from.html)
@@ -23,7 +25,7 @@ The repository holds two tools, both Python scripts. In order to use them, you n
 If you have been working with the Watson service and Python before, you probably already have everything installed. If not, you need to install Python and then head over to the [Watson Developer Tools](https://www.ibm.com/watson/developercloud/developer-tools.html) and follow the link to the [Python SDK](https://github.com/watson-developer-cloud/python-sdk). Install the SDK, too. Now download a copy of this repository or clone it.   
 
 ## wctool.py
-To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. Either username / password or the API key are needed. If you have multiple environments then you can specify the configuration file using the `-config myconfig.json` option.    
+To use the tool, copy `config.sample.json` or `config.ICFsample.json` to `config.json` and insert your service credentials. Note that the service URL depends on the IBM Cloud region. It is shown as part of the credentials. An API key is needed. If you have multiple environments then you can specify the configuration file using the `-config myconfig.json` option.    
 
 Some commands and parameters:
 ```

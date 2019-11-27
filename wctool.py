@@ -9,10 +9,11 @@
 
 import json, argparse, importlib
 from os.path import join, dirname
-from watson_developer_cloud import AssistantV1
+from ibm_watson import AssistantV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
 privcontext=None
-conversation=None
+assistant=None
 
 def loadAndInit(confFile=None):
     # Credentials are read from a file
@@ -25,28 +26,22 @@ def loadAndInit(confFile=None):
             privcontext={"private": {"icfcreds": {"user": icf_key[0], "password": icf_key[1]}}}
 
     # Initialize the Watson Assistant client
-    global conversation
-    if 'username' in configWA:
-        conversation = AssistantV1(
-            username=configWA['username'],
-            password=configWA['password'],
-            version=configWA['version'],
-            url=configWA['url']
-        )
-    elif 'apikey' in configWA:
-        conversation = AssistantV1(
-            iam_apikey=configWA['apikey'],
-            version=configWA['version'],
-            url=configWA['url']
-        )
+    global assistant
+    if 'apikey' in configWA:
+        # Authentication via IAM
+        authenticator = IAMAuthenticator(configWA['apikey'])
+        assistant = AssistantV1(
+            authenticator=authenticator,
+            version=configWA['version'])
+        assistant.set_service_url(configWA['url'])
     else:
-        print('Expected either username / password or apikey in credentials.')
+        print('Apikey for Watson Assistant in credentials.')
         exit
 
 
 # Define parameters that we want to catch and some basic command help
 def initParser(args=None):
-    parser = argparse.ArgumentParser(description='Manage Watson Conversation workspaces',
+    parser = argparse.ArgumentParser(description='Manage Watson Assistant workspaces (skills)',
                                      prog='wctool.py',
                                      usage='%(prog)s [-h | -l | -g | -c | -u | -delete] [options]')
     parser.add_argument("-l",dest='listWorkspaces', action='store_true', help='list workspaces')
@@ -79,15 +74,15 @@ def initParser(args=None):
 
 # List available dialogs
 def listWorkspaces():
-    print(json.dumps(conversation.list_workspaces().get_result(), indent=2))
+    print(json.dumps(assistant.list_workspaces().get_result(), indent=2))
 
 # Get and print a specific workspace by ID
 def getPrintWorkspace(workspaceID,exportWS):
-    print(json.dumps(conversation.get_workspace(workspace_id=workspaceID,export=exportWS).get_result(), indent=2))
+    print(json.dumps(assistant.get_workspace(workspace_id=workspaceID,export=exportWS).get_result(), indent=2))
 
 # Get a specific workspace by ID and export to file
 def getSaveWorkspace(workspaceID,outFile):
-    ws=conversation.get_workspace(workspace_id=workspaceID,export=True).get_result()
+    ws=assistant.get_workspace(workspace_id=workspaceID,export=True).get_result()
     with open(outFile,'w') as jsonFile:
         json.dump(ws, jsonFile, indent=2)
     print ("Workspace saved to " + outFile)
@@ -133,7 +128,7 @@ def updateWorkspace(workspaceID,
             payload['metadata'] = ws['metadata']
 
     # Now update the workspace
-    ws=conversation.update_workspace(workspace_id=workspaceID,
+    ws=assistant.update_workspace(workspace_id=workspaceID,
                                     name=newName,
                                     description=newDescription,
                                     language=newLang,
@@ -150,7 +145,7 @@ def updateWorkspace(workspaceID,
 def createWorkspace(newName, newDescription, newLang, inFile):
     with open(inFile) as jsonFile:
         ws=json.load(jsonFile)
-    newWorkspace=conversation.create_workspace(name=newName,
+    newWorkspace=assistant.create_workspace(name=newName,
                                                description=newDescription,
                                                language=newLang,
                                                intents=ws["intents"],
@@ -162,13 +157,13 @@ def createWorkspace(newName, newDescription, newLang, inFile):
 
 # Delete a workspaceID
 def deleteWorkspace(workspaceID):
-    conversation.delete_workspace(workspaceID)
+    assistant.delete_workspace(workspaceID)
     print ("Workspace deleted")
 
 # List logs for a specific workspace by ID
 # For now just dump them, do not filter, do not store
 def listLogs(workspaceID, filter):
-    print(json.dumps(conversation.list_logs(workspace_id=workspaceID,filter=filter).get_result(), indent=2))
+    print(json.dumps(assistant.list_logs(workspace_id=workspaceID,filter=filter).get_result(), indent=2))
 
 # Start a dialog and converse with Watson
 def converse(workspaceID, outputOnly=None, contextFile=None):
@@ -180,7 +175,7 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
   first=True
 
   ## Load conversation context on start or not?
-  contextStart = raw_input("Start with empty context? (Y/n)\n")
+  contextStart = input("Start with empty context? (Y/n)\n")
   if (contextStart == "n" or contextStart == "N"):
       print ("loading old session context...")
       with open(contextFile) as jsonFile:
@@ -190,7 +185,7 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
   # Now loop to chat
   while True:
     # get some input
-    minput = raw_input("\nPlease enter your input message:\n")
+    minput = input("\nPlease enter your input message:\n")
     # if we catch a "bye" then exit
     if (minput == "bye"):
       break
@@ -215,7 +210,7 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
 
     # send the input to Watson Assistant
     # Set alternate_intents to False for less output
-    resp=conversation.message(workspace_id=workspaceID,
+    resp=assistant.message(workspace_id=workspaceID,
                              input={'text': minput},
                              alternate_intents=True,
                              context=context,
@@ -237,7 +232,7 @@ def converse(workspaceID, outputOnly=None, contextFile=None):
             contextNew=hca.handleClientActions(context,resp['actions'], resp)
         
             # call Watson Assistant with result from client action(s)
-            resp=conversation.message(workspace_id=workspaceID,
+            resp=assistant.message(workspace_id=workspaceID,
                              input=resp['input'],
                              alternate_intents=True,
                              context=contextNew,
