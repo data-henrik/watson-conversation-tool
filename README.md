@@ -9,12 +9,12 @@ Update on 2019-11-27:
 The IBM Watson services moved to a new core SDK for handling authentication. I updated the code to support the new flow and in that process decided to only support API keys. If something is not working, open an issue please.
 
 This project is described in the following blog posts:
-* [Manage Your Watson Conversations from the Command Line or App](https://blog.4loeser.net/2017/03/manage-your-watson-conversations-from.html)
+* [Manage Your Watson Conversations from the Command Line or App](https://data-henrik.de/2017/03/manage-your-watson-conversations-from/)
 * [Watson Conversation: How to Manage Workspaces](https://www.ibm.com/blogs/bluemix/2017/04/watson-conversation-manage-workspaces/)
-* [Updates to Chatbot API and Tooling](https://blog.4loeser.net/2017/05/updates-to-chatbot-api-and-tooling.html)
-* [Chatbots: Testing Contexts](https://blog.4loeser.net/2017/07/chatbots-testing-contexts.html)
-* [Extended: Manage and interact with Watson Assistant from the command line](https://blog.4loeser.net/2018/07/extended-manage-and-interact-with.html)
-* [IBM Watson Assistant: Chatbot tool now supports testing client actions](https://blog.4loeser.net/2018/10/ibm-watson-assistant-chatbot-tool-now.html)
+* [Updates to Chatbot API and Tooling](https://data-henrik.de/2017/05/updates-to-chatbot-api-and-tooling/)
+* [Chatbots: Testing Contexts](https://data-henrik.de/2017/07/chatbots-testing-context/)
+* [Extended: Manage and interact with Watson Assistant from the command line](https://data-henrik.de/2018/07/extended-manage-and-interact-with/)
+* [IBM Watson Assistant: Chatbot tool now supports testing client actions](https://data-henrik.de/2018/10/ibm-watson-assistant-chatbot-tool-now/)
 * [Manage and test your chatbot from the command line](https://www.ibm.com/blogs/bluemix/2018/11/manage-and-test-your-chatbot-from-the-command-line/)
 
 # Overview
